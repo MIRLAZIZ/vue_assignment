@@ -3,51 +3,109 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import { usePostsStore } from '@/@core/stores/posts'
 import { onMounted, ref } from 'vue'
 import xlsx from 'xlsx/dist/xlsx.full.min'
+import DeleteDialog from '@/components/posts/DeleteDialog.vue'
 
-const ExportExcel = () => {
-  const ws = xlsx.utils.json_to_sheet(store.getposts)
-  const wb = xlsx.utils.book_new()
-  xlsx.utils.book_append_sheet(wb, ws, 'Sheet1')
-  xlsx.writeFile(wb, 'posts.xlsx')
-}
+
 
 
 
 const store = usePostsStore()
+const deleteDialog = ref(false)
+const deleteIndex = ref(null)
 
 // headers
 const headers = [
+  { title: 'ID', key: 'id' },
   { title: 'User', key: 'userId' },
   { title: 'Title', key: 'title' },
   { title: 'Post', key: 'body' },
   { title: 'Actions', key: 'actions' },
 
 ]
-// 👉 methods
-// const deleteItem = (itemId: number) => {
-//   if (!productList.value)
-//     return
+
+
+
+// export filtered data to excel
+const fileteredData = (id) => {
+
+  store.filterExport = store.getposts
+    .filter((post) => post.userId == id)
+    .map((post) => ({
+      id: post.id.toString(),
+      name: getUserName(post.userId),
+      title: post.title,
+      body: post.body
+    }));
+  store.postsTotlal = store.filterExport.length ? store.filterExport.length : store.getposts.length
+  store.options.itemsPerPage = store.filterExport.length ? store.filterExport.length : 10
+}
+
 
 
 onMounted(() => {
   if (!store.getposts.length) {
-    store.fetchPosts()
+    store.fetchPosts().then(() => {
+      store.postsTotlal = store.getposts.length
+
+    })
   }
 
   if (!store.users.length) {
     store.fetchUsers()
       .then(() => {
         store.users.forEach((user) => {
+          user.name = store.users.find((u) => u.id === user.id)?.name
           user.userId = user.id.toString()
+
         })
       })
   }
 
 })
 
+// get user name 
 const getUserName = (id) => {
   return store.users.find((user) => user.id === id)?.name
 }
+
+// Export Excel
+const ExportExcel = () => {
+  const posts = store.filterExport;
+
+  const ws = xlsx.utils.json_to_sheet(posts);
+
+  const wb = xlsx.utils.book_new();
+  xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+  ws['!cols'] = [];
+  const range = xlsx.utils.decode_range(ws['!ref']);
+  for (let C = range.s.c; C <= range.e.c; C++) {
+    const maxWidth = Math.max(
+      ...posts.map(row => {
+        const cell = xlsx.utils.encode_cell({ r: posts.indexOf(row) + 1, c: C });
+        const width = ws[cell] ? ws[cell].v.toString().length * 1.2 : 10;
+        return width;
+      })
+    );
+    ws['!cols'][C] = { width: maxWidth };
+  }
+
+  xlsx.writeFile(wb, 'posts.xlsx');
+}
+
+// delete post item 
+const deleteItem = (id) => {
+  console.log(id);
+  deleteIndex.value = store.getposts.findIndex(post => post.id == id)
+  deleteDialog.value = true
+}
+
+const deleteItemConfirm = () => {
+  store.getposts.splice(deleteIndex.value, 1)
+  deleteDialog.value = false
+}
+
+
 
 
 
@@ -57,14 +115,16 @@ const getUserName = (id) => {
 
 <template>
   <div>
+
     <div class="d-flex gap-3  align-end justify-end mb-6 ">
       <div class="w-25">
         <AppSelect :items="store.users" label="Filter" placeholder="Select User" item-title="name" item-value="userId"
-          v-model="store.search" clearable clear-icon="tabler-x" density="compact" />
+          v-model="store.search" clearable clear-icon="tabler-x" density="compact"
+          @update:model-value="fileteredData(store.search)" />
       </div>
 
 
-      <VBtn class="" @click="ExportExcel">
+      <VBtn class="" @click="ExportExcel" :disabled="!store.filterExport.length">
 
         <VIcon icon="tabler-upload" />
 
@@ -98,10 +158,10 @@ const getUserName = (id) => {
 
 
 
-      <!-- item.body substring(0, 20) -->
+      <!-- item.body substring(0, 30) -->
       <template #item.body="{ item }">
 
-        {{ item.body && item.body.length > 20 ? item.body?.substring(0, 20) + '...' : item.body }}
+        {{ item.body && item.body.length > 30 ? item.body?.substring(0, 30) + '...' : item.body }}
 
       </template>
 
@@ -122,7 +182,7 @@ const getUserName = (id) => {
           </IconBtn>
 
           <!-- delete item -->
-          <IconBtn>
+          <IconBtn @click="deleteItem(item.id)">
             <VIcon icon="tabler-trash" color="error" />
           </IconBtn>
         </div>
@@ -141,18 +201,15 @@ const getUserName = (id) => {
 
             <VPagination v-if="store.getposts.length" v-model="store.options.page"
               :total-visible="$vuetify.display.smAndDown ? 3 : 5"
-              :length="Math.ceil(store.getposts.length / store.options.itemsPerPage)" />
+              :length="Math.ceil(store.postsTotlal / store.options.itemsPerPage)" />
           </div>
         </VCardText>
       </template>
-
-
-
-
-
-
-
-
     </VDataTable>
+
+    <DeleteDialog v-model:delete-dialog="deleteDialog" @closeDelete="deleteDialog = false"
+      @deleteItemConfirm="deleteItemConfirm" />
+
+
   </div>
 </template>

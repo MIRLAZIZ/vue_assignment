@@ -8,6 +8,8 @@ export const usePostsStore = defineStore('posts', {
     options: { page: 1, itemsPerPage: 10 },
     users: [],
     comments: [],
+    filterExport: [],
+    postsTotlal: 0
 
 
 
