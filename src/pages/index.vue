@@ -4,7 +4,7 @@ import { usePostsStore } from '@/@core/stores/posts'
 import { onMounted, ref } from 'vue'
 import xlsx from 'xlsx/dist/xlsx.full.min'
 import DeleteDialog from '@/components/posts/DeleteDialog.vue'
-
+import UserMaps from '@/components/posts/UserMaps.vue'
 
 
 
@@ -12,6 +12,7 @@ import DeleteDialog from '@/components/posts/DeleteDialog.vue'
 const store = usePostsStore()
 const deleteDialog = ref(false)
 const deleteIndex = ref(null)
+const load = ref(false)
 
 // headers
 const headers = [
@@ -27,7 +28,6 @@ const headers = [
 
 // export filtered data to excel
 const fileteredData = (id) => {
-
   store.filterExport = store.getposts
     .filter((post) => post.userId == id)
     .map((post) => ({
@@ -44,9 +44,11 @@ const fileteredData = (id) => {
 
 onMounted(() => {
   if (!store.getposts.length) {
+    load.value = true
+
     store.fetchPosts().then(() => {
       store.postsTotlal = store.getposts.length
-
+      load.value = false
     })
   }
 
@@ -141,7 +143,7 @@ const deleteItemConfirm = () => {
 
     <!-- 👉 Data Table  -->
     <VDataTable v-if="store.getposts.length" :headers="headers" :items="store.getposts || []" :search="store.search"
-      :items-per-page="store.options.itemsPerPage" :page="store.options.page" class="text-no-wrap">
+      :items-per-page="store.options.itemsPerPage" :page="store.options.page" class="text-no-wrap" :loading="load">
 
       <!-- item  user name -->
       <template #item.userId="{ item }">
@@ -207,8 +209,11 @@ const deleteItemConfirm = () => {
       </template>
     </VDataTable>
 
+    <!-- delete dialog -->
     <DeleteDialog v-model:delete-dialog="deleteDialog" @closeDelete="deleteDialog = false"
       @deleteItemConfirm="deleteItemConfirm" />
+
+    <UserMaps :users="store.users" />
 
 
   </div>

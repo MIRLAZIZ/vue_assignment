@@ -1,8 +1,17 @@
 <template>
   <div>
+    <h3 @click="$router.go(-1)" class="mb-3 cursor-pointer">
+      <VIcon icon="tabler-chevron-left" size="27" />
+      Home
+    </h3>
+
+
 
 
     <VRow>
+
+
+
 
       <VCol cols="4" class="">
 

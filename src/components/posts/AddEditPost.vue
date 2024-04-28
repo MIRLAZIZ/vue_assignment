@@ -33,7 +33,7 @@
 
 
         <VCol cols="12" class="d-flex justify-end">
-          <VBtn type="reset" variant="outlined" color="secondary" @click="closeNavigationDrawer">
+          <VBtn variant="outlined" color="secondary" @click="closeNavigationDrawer">
             Cancel
           </VBtn>
 
@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick } from 'vue';
+import { onMounted, ref } from 'vue';
 import { usePostsStore } from '@/@core/stores/posts';
 import { useRoute, useRouter } from 'vue-router';
 import { useConfigStore } from '@/@core/stores/config';
@@ -102,7 +102,6 @@ const sendPost = () => {
 
 // close page method
 const closeNavigationDrawer = () => {
-  refForm.value?.reset()
   refForm.value?.resetValidation()
   router.push('/')
 
