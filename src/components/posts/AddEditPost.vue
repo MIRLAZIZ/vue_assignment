@@ -57,8 +57,6 @@ const productData = ref({
 const store = usePostsStore()
 const refForm = ref()
 
-
-
 // send post method
 const sendPost = () => {
   refForm.value?.validate().then(({ valid }) => {
@@ -87,7 +85,6 @@ const sendPost = () => {
     }
   })
 }
-
 
 // close page method
 const closeNavigationDrawer = () => {

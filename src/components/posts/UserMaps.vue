@@ -2,8 +2,6 @@
   <div>
     <h2 class="my-4">Users maps</h2>
     <div ref="mapContainer" class="container"></div>
-
-
   </div>
 </template>
 
@@ -19,8 +17,6 @@ const props = defineProps({
 })
 const map = ref()
 const mapContainer = ref()
-
-
 
 onMounted(() => {
   map.value = L.map(mapContainer.value).setView([51.505, -0.09], 2);

@@ -17,15 +17,24 @@
       </VCol>
       <VCol cols="8" class="">
 
+        <!-- comments  -->
         <VCard class="pa-5">
           <h2>Comments</h2>
-
-          <div v-for="comment in store.comments" class="border mt-3 rounded pa-3">
-            <h3>{{ comment.email }}</h3>
-            <h4>{{ comment.name }}</h4>
-            <br>
-            <p>{{ comment.body }}</p>
+          <div v-if="!store.comments.length">
+            <h3 class="text-center">No comments</h3>
           </div>
+
+          <div v-else>
+            <div v-for="comment in store.comments" class="border mt-3 rounded pa-3">
+              <h3>{{ comment.email }}</h3>
+              <h4>{{ comment.name }}</h4>
+              <br>
+              <p>{{ comment.body }}</p>
+            </div>
+
+          </div>
+
+
         </VCard>
       </VCol>
     </VRow>

@@ -6,9 +6,6 @@ import xlsx from 'xlsx/dist/xlsx.full.min'
 import DeleteDialog from '@/components/posts/DeleteDialog.vue'
 import UserMaps from '@/components/posts/UserMaps.vue'
 
-
-
-
 const store = usePostsStore()
 const deleteDialog = ref(false)
 const deleteIndex = ref(null)
@@ -24,8 +21,6 @@ const headers = [
 
 ]
 
-
-
 // export filtered data to excel
 const fileteredData = (id) => {
   store.filterExport = store.getposts
@@ -39,11 +34,9 @@ const fileteredData = (id) => {
   store.postsTotlal = store.filterExport.length ? store.filterExport.length : store.getposts.length
   store.options.itemsPerPage = store.filterExport.length ? store.filterExport.length : 10
 }
- get posts
 
-
-
-onMounted(() => {
+// store posts ?
+const getpostData = () => {
   if (!store.getposts.length) {
     load.value = true
 
@@ -52,7 +45,10 @@ onMounted(() => {
       load.value = false
     })
   }
+}
 
+// store users 
+const getuserData = () => {
   if (!store.users.length) {
     store.fetchUsers()
       .then(() => {
@@ -63,6 +59,17 @@ onMounted(() => {
         })
       })
   }
+}
+
+
+
+onMounted(() => {
+
+  getpostData()
+  getuserData()
+
+
+
 
 })
 
