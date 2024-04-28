@@ -39,6 +39,7 @@ const fileteredData = (id) => {
   store.postsTotlal = store.filterExport.length ? store.filterExport.length : store.getposts.length
   store.options.itemsPerPage = store.filterExport.length ? store.filterExport.length : 10
 }
+ get posts
 
 
 
@@ -102,41 +103,34 @@ const deleteItem = (id) => {
   deleteDialog.value = true
 }
 
+//  delete confirmation
 const deleteItemConfirm = () => {
   store.getposts.splice(deleteIndex.value, 1)
   deleteDialog.value = false
 }
-
-
-
-
-
-
-
 </script>
 
 <template>
   <div>
-
     <div class="d-flex gap-3  align-end justify-end mb-6 ">
+
+      <!-- filter pots user  -->
       <div class="w-25">
         <AppSelect :items="store.users" label="Filter" placeholder="Select User" item-title="name" item-value="userId"
           v-model="store.search" clearable clear-icon="tabler-x" density="compact"
           @update:model-value="fileteredData(store.search)" />
       </div>
 
-
+      <!-- excel export -->
       <VBtn class="" @click="ExportExcel" :disabled="!store.filterExport.length">
-
         <VIcon icon="tabler-upload" />
-
         Export
       </VBtn>
+
+      <!-- add post -->
       <VBtn class="" @click="$router.push('/posts/create')">
         <VIcon icon="tabler-plus" /> Add post
       </VBtn>
-
-
     </div>
 
 
@@ -199,8 +193,6 @@ const deleteItemConfirm = () => {
             <VTextField v-model="store.options.itemsPerPage" label="Rows per page:" type="number" min="-1" hide-details
               variant="underlined" style="max-inline-size: 8rem;min-inline-size: 5rem;" />
 
-
-
             <VPagination v-if="store.getposts.length" v-model="store.options.page"
               :total-visible="$vuetify.display.smAndDown ? 3 : 5"
               :length="Math.ceil(store.postsTotlal / store.options.itemsPerPage)" />
@@ -213,6 +205,7 @@ const deleteItemConfirm = () => {
     <DeleteDialog v-model:delete-dialog="deleteDialog" @closeDelete="deleteDialog = false"
       @deleteItemConfirm="deleteItemConfirm" />
 
+    <!-- user maps -->
     <UserMaps :users="store.users" />
 
 

@@ -1,20 +1,12 @@
 <template>
   <div>
-    <h3 @click="$router.go(-1)" class="mb-3 cursor-pointer">
+    <h3 @click="$router.push('/')" class="mb-3 cursor-pointer">
       <VIcon icon="tabler-chevron-left" size="27" />
       Home
     </h3>
 
-
-
-
     <VRow>
-
-
-
-
-      <VCol cols="4" class="">
-
+      <VCol cols="4">
         <VCard class="pa-5">
           <h2>Post</h2>
           <h3> {{ getUserName(postData.userId) }} </h3>
@@ -22,8 +14,6 @@
           <br>
           <p>{{ postData.body }}</p>
         </VCard>
-
-
       </VCol>
       <VCol cols="8" class="">
 
@@ -36,18 +26,7 @@
             <br>
             <p>{{ comment.body }}</p>
           </div>
-          <!-- <pre>
-              {{ store.comments }}
-
-            </pre> -->
-          <div>
-
-          </div>
-
-
-
         </VCard>
-
       </VCol>
     </VRow>
 
@@ -66,9 +45,8 @@ const getUserName = (id) => {
   return store.users.find((user) => user.id === id)?.name
 }
 
-
-
-const getpostData = (id) => {
+// get post data
+const getpostData = () => {
   if (!store.getposts.length) {
     store.fetchPosts()
       .then(() => {
@@ -86,15 +64,10 @@ const getuserData = () => {
   }
 }
 
-
 onMounted(() => {
   getpostData()
   getuserData()
   store.fetchComments(route)
-
-
-
-
 })
 
 </script>

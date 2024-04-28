@@ -3,10 +3,9 @@
 
     <h1>{{ $route.params.id ? 'Edit post' : 'Create Post' }}</h1>
 
+    <!-- 👉 Form -->
     <VForm ref="refForm" @submit.prevent="sendPost">
       <VRow>
-
-        <!-- 👉 Form -->
 
         <!-- 👉 select user -->
         <VCol cols="6">
@@ -14,24 +13,17 @@
             :rules="[requiredValidator]" :items="store.users" item-title="name" item-value="id" />
         </VCol>
 
-
         <!-- 👉 title -->
         <VCol cols="6">
           <AppTextField v-model="productData.title" :rules="[requiredValidator]" label="Title" />
-
         </VCol>
 
         <!-- 👉 post -->
         <VCol cols="6">
           <AppTextarea v-model="productData.body" :rules="[requiredValidator]" rows="4" label="Post" />
-
         </VCol>
 
-
-
-
-
-
+        <!-- btn group -->
         <VCol cols="12" class="d-flex justify-end">
           <VBtn variant="outlined" color="secondary" @click="closeNavigationDrawer">
             Cancel
@@ -41,11 +33,8 @@
             Submit
           </VBtn>
         </VCol>
-
       </VRow>
-
     </VForm>
-
   </div>
 </template>
 

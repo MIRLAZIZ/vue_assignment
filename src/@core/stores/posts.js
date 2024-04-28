@@ -66,9 +66,7 @@ export const usePostsStore = defineStore('posts', {
   },
 })
 
-///comments?postId=1
 
-// comments
 
 
 
