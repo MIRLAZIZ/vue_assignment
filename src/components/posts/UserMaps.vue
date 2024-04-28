@@ -20,11 +20,13 @@ const props = defineProps({
 const map = ref()
 const mapContainer = ref()
 
+
+
 onMounted(() => {
   map.value = L.map(mapContainer.value).setView([51.505, -0.09], 2);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">copyright</a>'
   }).addTo(map.value);
 
   // props users data dinamic
@@ -36,6 +38,13 @@ onMounted(() => {
       })
     }, 1000)
   }
+
+  L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+  }).addTo(map.value);
+
+
 })
 </script>
 
