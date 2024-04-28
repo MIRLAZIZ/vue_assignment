@@ -53,13 +53,7 @@ const getpostData = () => {
 const getuserData = () => {
   if (!store.users.length) {
     store.fetchUsers()
-      .then(() => {
-        store.users.forEach((user) => {
-          user.name = store.users.find((u) => u.id === user.id)?.name
-          user.userId = user.id.toString()
 
-        })
-      })
   }
 }
 
