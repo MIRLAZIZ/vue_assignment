@@ -85,7 +85,7 @@ const ExportExcel = () => {
     const maxWidth = Math.max(
       ...posts.map(row => {
         const cell = xlsx.utils.encode_cell({ r: posts.indexOf(row) + 1, c: C });
-        const width = ws[cell] ? ws[cell].v.toString().length * 1.2 : 10;
+        const width = ws[cell] ? ws[cell].v.toString().length * 1.1 : 10;
         return width;
       })
     );
