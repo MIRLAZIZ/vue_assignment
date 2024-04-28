@@ -9,7 +9,9 @@ export const usePostsStore = defineStore('posts', {
     users: [],
     comments: [],
     filterExport: [],
-    postsTotlal: 0
+    postsTotlal: 0,
+    filterArray: [],
+    posts: []
 
 
 

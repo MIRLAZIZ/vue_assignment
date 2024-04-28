@@ -25,12 +25,14 @@ const headers = [
 const fileteredData = (id) => {
   store.filterExport = store.getposts
     .filter((post) => post.userId == id)
-    .map((post) => ({
-      id: post.id.toString(),
-      name: getUserName(post.userId),
-      title: post.title,
-      body: post.body
-    }));
+  store.filterArray = store.filterExport
+  store.filterExport = store.filterExport.map((post) => ({
+    id: post.id.toString(),
+    name: getUserName(post.userId),
+    title: post.title,
+    body: post.body
+  })
+  );
   store.postsTotlal = store.filterExport.length ? store.filterExport.length : store.getposts.length
   store.options.itemsPerPage = store.filterExport.length ? store.filterExport.length : 10
 }
@@ -67,10 +69,9 @@ onMounted(() => {
 
   getpostData()
   getuserData()
-
-
-
-
+  if (store.search) {
+    fileteredData(store.search)
+  }
 })
 
 // get user name 
@@ -114,11 +115,15 @@ const deleteItem = (id) => {
 const deleteItemConfirm = () => {
   store.getposts.splice(deleteIndex.value, 1)
   deleteDialog.value = false
+  if (store.search) {
+    fileteredData(store.search)
+  }
 }
 </script>
 
 <template>
   <div>
+
     <div class="d-flex gap-3  align-end justify-end mb-6 ">
 
       <!-- filter pots user  -->
@@ -143,8 +148,9 @@ const deleteItemConfirm = () => {
 
 
     <!-- 👉 Data Table  -->
-    <VDataTable v-if="store.getposts.length" :headers="headers" :items="store.getposts || []" :search="store.search"
-      :items-per-page="store.options.itemsPerPage" :page="store.options.page" class="text-no-wrap" :loading="load">
+    <VDataTable v-if="store.getposts.length" :headers="headers"
+      :items="store.search ? store.filterArray : store.getposts" :items-per-page="store.options.itemsPerPage"
+      :page="store.options.page" class="text-no-wrap" :loading="load">
 
       <!-- item  user name -->
       <template #item.userId="{ item }">

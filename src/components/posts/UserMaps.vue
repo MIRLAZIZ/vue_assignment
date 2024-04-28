@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="my-4">Users maps</h2>
+    <h2 class="my-4 mt-10">Users maps</h2>
     <div ref="mapContainer" class="container"></div>
   </div>
 </template>
