@@ -117,12 +117,11 @@ const deleteItemConfirm = () => {
 
 <template>
   <div>
-
     <div class="d-flex gap-3  align-end justify-end mb-6 ">
 
       <!-- filter pots user  -->
       <div class="w-25">
-        <AppSelect :items="store.users" label="Filter" placeholder="Select User" item-title="name" item-value="userId"
+        <AppSelect :items="store.users" label="Filter" placeholder="Select User" item-title="name" item-value="id"
           v-model="store.search" clearable clear-icon="tabler-x" density="compact"
           @update:model-value="fileteredData(store.search)" />
       </div>
